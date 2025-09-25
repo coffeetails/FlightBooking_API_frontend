@@ -1,33 +1,65 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState } from 'react';
+import axios from 'axios';
 import './App.css'
 
+interface Message {
+  id: number;
+  content: string;
+  sender: string;
+}
+
 function App() {
-  const [count, setCount] = useState(0)
+  const axiosInstance = axios.create({ baseURL: 'http://localhost:8080/api/ai' });
+
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState<string>('');
+
+  const sendMessage = async () => {
+    if (input.trim() === '') return;
+
+    const newMessage: Message = { id: Date.now(), content: input, sender: 'User' };
+    
+    try {
+      //const response = await axios.post('https://your-api-endpoint.com/api/messages', newMessage);
+      const response = await axiosInstance.get(
+        '/chat',
+        {
+          params: {
+            chatId: 105,
+            question: newMessage.content
+          }
+        }
+      );
+      setMessages([...messages, newMessage, { id: Date.now(), content: response.data, sender: 'FlightAssist' }]);
+      console.log("all messages: ", messages);
+      
+      setInput('');
+      
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <main className="chatWindow">
+        <section className="chatWindow-wrapper">
+          {messages.map(message => (
+            <p key={message.id}>
+              <strong>{message.sender}:</strong> {message.content}
+            </p>
+          ))}
+        </section>
+        
+        <input
+          type="text"
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          placeholder="Type a message..."
+          style={{ width: '80%', padding: '5px' }}
+        />
+        <button onClick={sendMessage}>Send</button>
+      </main>
     </>
   )
 }
