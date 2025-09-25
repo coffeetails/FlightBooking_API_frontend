@@ -14,6 +14,7 @@ function App() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>('');
 
+  /*
   useEffect(() => {
     // For easier styling & debugging
     setMessages([
@@ -26,7 +27,8 @@ function App() {
       },
     ]);
   },[]);
-
+  /**/
+  
   const sendMessage = async () => {
     if (input.trim() === '') return;
 
