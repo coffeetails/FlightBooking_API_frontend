@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './App.css'
 
@@ -13,6 +13,19 @@ function App() {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>('');
+
+  useEffect(() => {
+    // For easier styling & debugging
+    setMessages([
+      { id: 0, content: "Hi", sender: 'You' },
+      { id: 1, content: "Hello, how can I help you today?", sender: 'FlightAssist' },
+      { id: 2, content: "When is the next available flight?", sender: 'You' },
+      {
+        id: 3, content: "Here is the next available flight: - ** Flight FL001** to London - Departure: September 26, 2025, " +
+        "at 10: 36 AM - Arrival: September 26, 2025, at 12: 36 PM - Price: $199.99", sender: 'FlightAssist'
+      },
+    ]);
+  },[]);
 
   const sendMessage = async () => {
     if (input.trim() === '') return;
@@ -31,8 +44,6 @@ function App() {
         }
       );
       setMessages([...messages, newMessage, { id: Date.now(), content: response.data, sender: 'FlightAssist' }]);
-      console.log("all messages: ", messages);
-      
       setInput('');
       
     } catch (error) {
@@ -43,8 +54,8 @@ function App() {
   return (
     <>
       <main className="chatWindow">
-        <section className="chatWindow-wrapper">
-          {messages.map(message => (
+        <section className="chatWindow-messageWrapper">
+          {messages.slice(0).reverse().map(message => (
             <p key={message.id}>
               <strong>{message.sender}:</strong> {message.content}
             </p>

@@ -4,20 +4,36 @@
   padding: 1rem;
 }
 
-.chatWindow-wrapper {
+.chatWindow-messageWrapper {
   height: 300px;
   overflow-y: scroll;
   border: 1px solid #ccc;
   margin-bottom: 0.5rem;
+  box-shadow: inset 3px 3px 5px #999999;
+  border-radius: 12px;
+
+  display: flex;
+  flex-direction: column-reverse;
 
   p {
     margin: 0.5rem;
     padding: 0.5rem;
-    background: #f0f0f0;
+    border: 1px solid #999999;
+    border-radius: 8px;
   }
 }
 
+input {
+  border: 1px solid#999999;
+  border-radius: 8px;
+  box-shadow: inset 1px 1px 3px #999999;
+}
+
 button {
+  border: 1px solid #999999;
+  border-radius: 8px;
+  box-shadow: inset 1px 1px 2px #ffffff, 1px 1px 3px #999999;
+  background-color: #c6e2b4;
   float: right;
   padding: 0.25rem 0.5rem;
 }
